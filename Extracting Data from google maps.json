@@ -1,0 +1,578 @@
+{
+  "name": "Extracting Data from google maps",
+  "nodes": [
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1Y1T_KMQ5_bl85-1jHW50Trtw7Rf_hMDo87VgvMZj2tw",
+          "mode": "list",
+          "cachedResultName": "Lead Gen for Real Estate",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Y1T_KMQ5_bl85-1jHW50Trtw7Rf_hMDo87VgvMZj2tw/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Neighborhood List",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Y1T_KMQ5_bl85-1jHW50Trtw7Rf_hMDo87VgvMZj2tw/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Status"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        -520,
+        180
+      ],
+      "id": "5f19ae3b-b855-4352-af52-027fe5f424dd",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "dUdZ3pi1iymUai6I",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -80,
+        180
+      ],
+      "id": "d4a06aa4-386b-479a-b26c-c5f97048d76d",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f29344ac-b14b-440a-a899-345450ec1180",
+              "name": "INDUSTRY NAME",
+              "value": "Real Estate Agents",
+              "type": "string"
+            },
+            {
+              "id": "d5b44dac-8c56-4e0a-92d0-038759f92d7d",
+              "name": "API KEY",
+              "value": "<your api key for brightdata>",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        260,
+        200
+      ],
+      "id": "618d8a55-0694-4d03-b4f3-50f207fedf6e",
+      "name": "Edit Fields",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1Y1T_KMQ5_bl85-1jHW50Trtw7Rf_hMDo87VgvMZj2tw",
+          "mode": "list",
+          "cachedResultName": "Lead Gen for Real Estate",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Y1T_KMQ5_bl85-1jHW50Trtw7Rf_hMDo87VgvMZj2tw/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 954930494,
+          "mode": "list",
+          "cachedResultName": "Data From Serper",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Y1T_KMQ5_bl85-1jHW50Trtw7Rf_hMDo87VgvMZj2tw/edit#gid=954930494"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Title": "={{ $json.title }}",
+            "Address": "={{ $json.address }}",
+            "Phone number": "={{ String($json.phone || '').trim().replace(/^\\+1[\\s.-]*/, '') }}",
+            "Rating": "={{ $json.rating }}",
+            "City": "={{ $('Get row(s) in sheet').item.json.City_Name }}",
+            "Neighborhood": "={{ $('Get row(s) in sheet').item.json.Neighborhood }}",
+            "Website": "={{ $json.link }}",
+            "Rating Count": "={{ $json.reviews_cnt }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Title",
+              "displayName": "Title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Address",
+              "displayName": "Address",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Website",
+              "displayName": "Website",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Phone number",
+              "displayName": "Phone number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Rating",
+              "displayName": "Rating",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Rating Count",
+              "displayName": "Rating Count",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "City",
+              "displayName": "City",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Neighborhood",
+              "displayName": "Neighborhood",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Qualified /Disqualified",
+              "displayName": "Qualified /Disqualified",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Added to Main sheet",
+              "displayName": "Added to Main sheet",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        260,
+        0
+      ],
+      "id": "49f946ae-f1e4-4640-a492-1b64a192e646",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "dUdZ3pi1iymUai6I",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1Y1T_KMQ5_bl85-1jHW50Trtw7Rf_hMDo87VgvMZj2tw",
+          "mode": "list",
+          "cachedResultName": "Lead Gen for Real Estate",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Y1T_KMQ5_bl85-1jHW50Trtw7Rf_hMDo87VgvMZj2tw/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Neighborhood List",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1-I72OFWe43FtlMA2g1hxcbh6WoY2AUpJUq1lxdZyVUs/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "row_number": "={{ $('Get row(s) in sheet').item.json.row_number }}",
+            "Status": "Done"
+          },
+          "matchingColumns": [
+            "row_number"
+          ],
+          "schema": [
+            {
+              "id": "Neighborhood",
+              "displayName": "Neighborhood",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "City_Name",
+              "displayName": "City_Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "State_Name",
+              "displayName": "State_Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Zips",
+              "displayName": "Zips",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        480,
+        0
+      ],
+      "id": "83fec8c2-4d00-40d7-813f-8dc3ae7a2251",
+      "name": "Update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "dUdZ3pi1iymUai6I",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        -300,
+        180
+      ],
+      "id": "9cf0504f-4e25-4d0d-b284-30ec0fbcb70b",
+      "name": "Limit"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 1
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -720,
+        180
+      ],
+      "id": "df0ac2a4-eee5-45f4-ad01-a564d2bc4329",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "jsCode": "// n8n \"Code\" node\n// Input shape (1 item):\n// { general: {...}, organic: [ {...}, {...}, ... ] }\n//\n// Output: N items, one per organic[i], with _index and _general attached.\n\nconst FIELD_TO_SPLIT = 'organic';   // change if your array key differs\nconst CARRY_KEYS = ['general'];     // top-level keys to carry as context\n\n// Support both: single object, or top-level array with first element being the object\nconst root = items[0]?.json ?? {};\nconst payload = Array.isArray(root) ? root[0] : root;\n\nconst arr = payload?.[FIELD_TO_SPLIT];\nif (!Array.isArray(arr)) {\n  throw new Error(`Field \"${FIELD_TO_SPLIT}\" not found or is not an array.`);\n}\n\n// Collect optional context\nconst ctx = {};\nfor (const k of CARRY_KEYS) {\n  if (payload[k] !== undefined) ctx[k] = payload[k];\n}\n\n// Fan-out\nconst out = arr.map((el, i) => ({\n  json: {\n    _index: i + 1,\n    _general: ctx,   // keep context separate to avoid key collisions\n    ...el,\n  },\n  // Preserve linkage to the original input item\n  pairedItem: { item: 0 },\n}));\n\nreturn out;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1120,
+        300
+      ],
+      "id": "0a07d760-37b0-48a7-ad93-a6764b2a5dbd",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "6c923fbe-5e6d-4335-b6fc-a43f8956e0e0",
+              "name": "Query",
+              "value": "={{ $json['INDUSTRY NAME'] }} in {{ $('Limit').item.json.Neighborhood }} in {{ $('Limit').item.json.City_Name }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        480,
+        200
+      ],
+      "id": "2dfacf43-5b87-4c69-bc0a-95bf0657d6bd",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "jsCode": "// n8n Code node (JavaScript)\n// Converts strings like \"Plumber in Fieldstone in San Antonio\" → \"Plumber+in+Fieldstone+in+San+Antonio\"\n// Works for arrays & nested objects. Safe for multiple items.\n\n// ===== Configure here =====\nconst FORM_ENCODE = true;       // true = encodeURIComponent + spaces→'+' (safe for URLs); false = just replace whitespace→'+'\nconst FIELDS = null;            // null = transform ALL string fields; or set e.g. ['query', 'address.city']\nconst OUTPUT_SUFFIX = '';       // when FIELDS is set: '' = overwrite; '_plus' = write to sibling field (e.g., 'query_plus')\n// ==========================\n\nfunction toPlusQuery(str) {\n  const s = String(str).trim();\n  if (!FORM_ENCODE) return s.replace(/\\s+/g, '+');\n  return encodeURIComponent(s).replace(/%20/g, '+');\n}\n\nfunction transformRecursively(value) {\n  if (typeof value === 'string') return toPlusQuery(value);\n  if (Array.isArray(value)) return value.map(transformRecursively);\n  if (value && typeof value === 'object') {\n    const out = {};\n    for (const [k, v] of Object.entries(value)) out[k] = transformRecursively(v);\n    return out;\n  }\n  return value; // numbers, booleans, null, undefined untouched\n}\n\nfunction getByPath(obj, path) {\n  return path.split('.').reduce((o, k) => (o == null ? o : o[k]), obj);\n}\n\nfunction setByPath(obj, path, val) {\n  const parts = path.split('.');\n  const last = parts.pop();\n  let cur = obj;\n  for (const p of parts) cur = (cur[p] ??= {});\n  cur[last] = val;\n}\n\nconst inputItems = $input.all();\n\nconst out = inputItems.map((item, idx) => {\n  let newJson = JSON.parse(JSON.stringify(item.json)); // deep clone\n\n  if (FIELDS && FIELDS.length) {\n    for (const p of FIELDS) {\n      const raw = getByPath(item.json, p);\n      if (raw === undefined) continue;\n      const transformed = transformRecursively(raw);\n      const targetPath = OUTPUT_SUFFIX ? (p + OUTPUT_SUFFIX) : p; // e.g., 'address.city_plus'\n      setByPath(newJson, targetPath, transformed);\n    }\n  } else {\n    // Transform everything that's a string\n    newJson = transformRecursively(newJson);\n  }\n\n  return { json: newJson, binary: item.binary, pairedItem: { item: idx } };\n});\n\nreturn out;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        700,
+        200
+      ],
+      "id": "0551cfa9-5b6e-460c-a312-db6af1227d97",
+      "name": "Code1"
+    },
+    {
+      "parameters": {
+        "zone": {
+          "__rl": true,
+          "value": "serp_api1",
+          "mode": "list",
+          "cachedResultName": "serp_api1"
+        },
+        "country": {
+          "__rl": true,
+          "mode": "list",
+          "value": "us"
+        },
+        "url": "=https://www.google.com/maps/search/{{ $json.Query }}/?brd_json=1",
+        "requestOptions": {}
+      },
+      "type": "@brightdata/n8n-nodes-brightdata.brightData",
+      "typeVersion": 1,
+      "position": [
+        900,
+        200
+      ],
+      "id": "45948b90-fa98-451a-993b-2c6af5170ab4",
+      "name": "Google Maps Search via Bright Data Official Node",
+      "credentials": {
+        "brightdataApi": {
+          "id": "ofo0TiM6HxAHUnuM",
+          "name": "BrightData account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Limit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limit": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Code1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code1": {
+      "main": [
+        [
+          {
+            "node": "Google Maps Search via Bright Data Official Node",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Maps Search via Bright Data Official Node": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "275f935b-2c06-429b-b513-e6a4b3d8a4ea",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "7d00adb66fd9b9e829cd2b9ea4e4833789b30d07b2af67253b71bc389fcab134"
+  },
+  "id": "ZW5DQttzTxG5SYvD",
+  "tags": []
+}
