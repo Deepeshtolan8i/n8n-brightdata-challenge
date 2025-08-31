@@ -1,0 +1,137 @@
+{
+  "name": "Extracting Data from google maps",
+  "nodes": [
+    {
+      "parameters": {
+        "documentId": "<google sheet id comes here>",
+        "sheetName": "<sheet name or gid comes here>",
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Status"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [-520, 180],
+      "id": "5f19ae3b-b855-4352-af52-027fe5f424dd",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": "<google sheets credential comes here>"
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [-80, 180],
+      "id": "d4a06aa4-386b-479a-b26c-c5f97048d76d",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "INDUSTRY NAME",
+              "value": "Real Estate Agents",
+              "type": "string"
+            },
+            {
+              "name": "API KEY",
+              "value": "<apollo api comes here>",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [260, 200],
+      "id": "618d8a55-0694-4d03-b4f3-50f207fedf6e",
+      "name": "Edit Fields",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": "<google sheet id comes here>",
+        "sheetName": "<sheet name or gid comes here>",
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Title": "={{ $json.title }}",
+            "Address": "={{ $json.address }}",
+            "Phone number": "={{ String($json.phone || '').trim().replace(/^\\+1[\\s.-]*/, '') }}",
+            "Rating": "={{ $json.rating }}",
+            "City": "={{ $('Get row(s) in sheet').item.json.City_Name }}",
+            "Neighborhood": "={{ $('Get row(s) in sheet').item.json.Neighborhood }}",
+            "Website": "={{ $json.link }}",
+            "Rating Count": "={{ $json.reviews_cnt }}"
+          },
+          "matchingColumns": []
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [260, 0],
+      "id": "49f946ae-f1e4-4640-a492-1b64a192e646",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": "<google sheets credential comes here>"
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": "<google sheet id comes here>",
+        "sheetName": "<sheet name or gid comes here>",
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "row_number": "={{ $('Get row(s) in sheet').item.json.row_number }}",
+            "Status": "Done"
+          },
+          "matchingColumns": ["row_number"]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [480, 0],
+      "id": "83fec8c2-4d00-40d7-813f-8dc3ae7a2251",
+      "name": "Update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": "<google sheets credential comes here>"
+      }
+    },
+    {
+      "parameters": {
+        "zone": "serp_api1",
+        "country": "us",
+        "url": "=https://www.google.com/maps/search/{{ $json.Query }}/?brd_json=1",
+        "requestOptions": {}
+      },
+      "type": "@brightdata/n8n-nodes-brightdata.brightData",
+      "typeVersion": 1,
+      "position": [900, 200],
+      "id": "45948b90-fa98-451a-993b-2c6af5170ab4",
+      "name": "Google Maps Search via Bright Data Official Node",
+      "credentials": {
+        "brightdataApi": "<brightdata api comes here>"
+      }
+    }
+  ],
+  "connections": { ... },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  }
+}
