@@ -88,7 +88,7 @@ Built for efficient B2B lead generation and personalized outreach at scale.
 
 ## 🎬 Demo / Live Access
 
-Demo Video: [Add Loom/YouTube link here]
+Demo Video: https://youtu.be/7_WnkIvzdB4
 
 ---
 
